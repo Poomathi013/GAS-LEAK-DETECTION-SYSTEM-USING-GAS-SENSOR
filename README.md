@@ -1,23 +1,19 @@
 # GAS-LEAK-DETECTION-SYSTEM-USING-GAS-SENSOR
 
 ## Aim:
-	To measure the air quality using Gas Sensor  MQ-2 with Arduino UNO Board/ESP-32 using Tinker CAD.
+To measure the air quality using Gas Sensor  MQ-2 with Arduino UNO Board/ESP-32 using Tinker CAD.
 
 ## Hardware / Software Tools required:
-	PC/ Laptop with Internet connection
-  Tinker CAD tool (Online)
-	Arduino UNO Board/ESP-32
-  Gas sensor (MQ-2)
+PC/ Laptop with Internet connection
+Tinker CAD tool (Online)
+Arduino UNO Board/ESP-32
+Gas sensor (MQ-2)
 	
 ## Circuit Diagram:
-
- 
-
-
-
+<img width="997" height="557" alt="image" src="https://github.com/user-attachments/assets/f2b9ebff-0c02-4ee0-8d00-448792a05c8f" />
 
 ## Theory :
- The Arduino Uno is powered by the ATmega328P, an 8-bit microcontroller that runs at 16 MHz. It has 32 KB of flash memory, 2 KB of SRAM, and 1 KB of EEPROM. The board 
+The Arduino Uno is powered by the ATmega328P, an 8-bit microcontroller that runs at 16 MHz. It has 32 KB of flash memory, 2 KB of SRAM, and 1 KB of EEPROM. The board 
 has 14 digital I/O pins (of which 6 can be used as PWM outputs) and 6 analog input pins. These pins allow the board to interface with various sensors, actuators, and other devices.
 The Arduino Uno can be powered via a USB connection or an external power supply. The board has a built-in voltage regulator to manage power from 7 to 12 volts.
 The board is programmable using the Arduino IDE (Integrated Development Environment), which supports a simplified version of C/C++. The code, known as a "sketch," is uploaded to the board via a USB connection. The Uno has a USB-B port, which is used for communication with a computer. The USB connection also powers the board when connected. The board includes a reset button that restarts the microcontroller, useful during programming and troubleshooting. The In-Circuit Serial Programming (ICSP) header allows for low-level programming of the microcontroller or firmware updates. The Uno has a built-in LED on pin 13, commonly used for simple tests and debugging.
@@ -57,10 +53,67 @@ Step 7: Save Your Work
 •	Save the Circuit: Click "Save" to keep your circuit design and code for future use.
 
 ## Program:
+```
+#include <LiquidCrystal.h>
+LiquidCrystal lcd(5,6,8,9,10,11); // RS, EN, D4, D5, D6, D7
+
+// Pin variables
+int redLed = 3;
+int greenLed = 2;
+int buzzer = 4;
+int sensor = A0;
+int sensorThresh = 400;
+
+void setup() {
+  pinMode(redLed, OUTPUT);
+  pinMode(greenLed, OUTPUT);
+  pinMode(buzzer, OUTPUT);
+  pinMode(sensor, INPUT);
+  Serial.begin(9600);
+  lcd.begin(16,2);
+}
+
+void loop() {
+  int analogValue = analogRead(sensor);
+  Serial.println(analogValue);
+
+  lcd.setCursor(0,0);
+  lcd.print("Gas : ");
+  lcd.print(analogValue);
+  lcd.print("   "); // Clear extra digits
+
+  if(analogValue > sensorThresh) {
+    // Gas detected
+    digitalWrite(redLed, HIGH);
+    digitalWrite(greenLed, LOW);
+
+    // Buzzer beep
+    tone(buzzer, 1000);
+    delay(500);
+    noTone(buzzer);
+    delay(500);
+
+    // Display alert messages
+    lcd.setCursor(0,1);
+    lcd.print("WARNING        ");
+  }
+  else {
+    // Safe condition
+    digitalWrite(redLed, LOW);
+    digitalWrite(greenLed, HIGH);
+    noTone(buzzer);
+
+    lcd.setCursor(0,1);
+    lcd.print("ALL CLEAR      ");
+  }
+
+  delay(100); // Small delay to refresh LCD
+}
+```
 
 ## Output:
-
-   
+<img width="1607" height="573" alt="image" src="https://github.com/user-attachments/assets/7aeeb0d9-b90c-4467-8106-d2e9e282b5df" />
 
 ## Result:
+The quality of air is measured using Gas Sensor MQ-2 with Arduino UNO Board/ESP-32 using Tinker CAD Verified Successfully.
 
